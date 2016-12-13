@@ -1,0 +1,53 @@
+################################################################################
+# Redis has four log levels: debug, verbose, notice, and warning.
+
+# #define LL_DEBUG 0
+# #define LL_VERBOSE 1
+# #define LL_NOTICE 2
+# #define LL_WARNING 3
+
+# The notation used in the log is defined as:
+
+# const char *c = ".-*#";
+
+# The default verbosity log level is notice.
+# In the log files the various log levels are represented as follows:
+
+# . debug
+# - verbose
+# * notice
+# # warning
+
+# Another way to think of it is: dot, line 3 lines, and 4 lines.
+
+# The log output for Redis 2.x will look something like this:
+# [pid] date loglevel message
+
+# For instance:
+# [4018] 14 Nov 07:01:22.119 * Background saving terminated with success
+
+# The log output for Redis 3.x changes slightly and adds "role"
+
+# pid:role timestamp loglevel message
+
+# The possible values for role are as follows:
+
+# X sentinel
+# C RDB/AOF writing child
+# S slave
+# M master
+
+# Examples 3.X:
+# 17929:M 04 Jul 13:44:04.053 * 10 changes in 300 seconds. Saving...
+# 17929:M 04 Jul 13:44:04.054 * Background saving started by pid 11405
+# 11405:C 04 Jul 13:44:04.607 * DB saved on disk
+# 11405:C 04 Jul 13:44:04.608 * RDB: 2 MB of memory used by copy-on-write
+# 17929:M 04 Jul 13:44:04.655 * Background saving terminated with success
+################################################################################
+
+
+REDIS_TIMESTAMP %{MONTHDAY} %{MONTH} %{TIME}
+
+# [pid] date loglevel message
+# pid:role timestamp loglevel message
+REDIS_LOG \[?%{POSINT:pid:int}(:%{WORD:role})?\]? %{REDIS_TIMESTAMP:log_ts} [\.\-\*#] %{DATA:log_msg}\n

@@ -1,0 +1,10 @@
+# # Time: 130801  2:43:43
+# # User@Host: root[root] @ localhost []
+# # Query_time: 0.185773  Lock_time: 0.148868 Rows_sent: 0  Rows_examined: 5440
+# use dbname; // option
+# SET timestamp=1375296223;
+# select * from t where engine='xxx';
+
+#MYSQL_SLOW_LOG (?ms)^# User@Host: %{USER:user}\[[^\]]+\] @ (?P<clienthost>.*?) \[(?:%{IP:clientip})?\]\s*# Query_time: %{NUMBER:query_time:float}\s+Lock_time: %{NUMBER:lock_time:float}\s+Rows_sent: %{NUMBER:rows_sent:int}\s+Rows_examined: %{NUMBER:rows_examined:int}\s*(?:use %{DATA:database};\s*)?SET timestamp=%{NUMBER:timestamp};\s*(?P<query>.*)\s*(?:\n#\s+Time)?.*$
+
+MYSQL_SLOW_LOG (?ms)^# User@Host: %{USER:user}\[[^\]]+\] @ (?P<clienthost>.*?) \[(?:%{IP:clientip})?\]\s*# Query_time: %{NUMBER:query_time:float}\s+Lock_time: %{NUMBER:lock_time:float}\s+Rows_sent: %{NUMBER:rows_sent:int}\s+Rows_examined: %{NUMBER:rows_examined:int}\s*(?:use %{DATA:database};\s*)?SET timestamp=%{NUMBER:timestamp};\s*(?P<query>(?P<action>\w+).*)\s*(?:\n#\s+Time)?.*$

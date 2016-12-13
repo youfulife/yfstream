@@ -1,0 +1,11 @@
+# [2016-08-23 00:03:08,569][ERROR][license.plugin.core      ] [es-client0]
+
+#[2016-08-23 00:04:12,901][INFO ][rest.suppressed          ] /index.php Params: {a=login, index=index.php, m=Public}
+#RemoteTransportException[[es-master2][10.161.214.104:9300][indices:admin/get]]; nested: IndexNotFoundException[no such index];
+#Caused by: [index.php] IndexNotFoundException[no such index]
+#        at org.elasticsearch.cluster.metadata.IndexNameExpressionResolver$WildcardExpressionResolver.resolve(IndexNameExpressionResolver.java:560)
+#        at org.elasticsearch.cluster.metadata.IndexNameExpressionResolver.concreteIndices(IndexNameExpressionResolver.java:127)
+#        at org.elasticsearch.cluster.metadata.IndexNameExpressionResolver.concreteIndices(IndexNameExpressionResolver.java:71)
+#        at org.elasticsearch.action.admin.indices.get.TransportGetIndexAction.checkBlock(TransportGetIndexAction.java:63)
+
+ES_LOG \[%{TIMESTAMP_ISO8601:log_ts}\]\[%{DATA:severity}%{SPACE}\]\[%{DATA:component}%{SPACE}\] (?s)(?P<log_msg>.*)

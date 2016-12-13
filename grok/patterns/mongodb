@@ -1,0 +1,12 @@
+
+# https://docs.mongodb.com/manual/reference/log-messages/
+# https://github.com/rueckstiess/mongodb-log-spec
+# <timestamp> <severity> <component> [<context>] <message>
+# 2016-08-22T15:12:21.161+0800 I COMMAND  [conn640265] command metadata.http command: insert { insert: "http", ordered: true, documents: 149 } ntoskip:0 ninserted:149 keyUpdates:0 writeConflicts:0 numYields:0 reslen:100 locks:{ Global: { acquireCount: { r: 152, w: 152 } }, Database: { acquireCount: { w: 152 } }, Collection: { acquireCount: { w: 3 } }, Metadata: { acquireCount: { w: 149 } }, oplog: { acquireCount: { w: 149 } } } protocol:op_query 524ms
+
+MONGO3_SEVERITY \w
+MONGO3_COMPONENT %{WORD}|-
+MONGO_SLOWQUERY %{WORD:command} %{NOTSPACE:database}\.%{NOTSPACE:collection} %{WORD}: %{WORD:operation} \{ %{GREEDYDATA:mongoStatement} \} %{GREEDYDATA} %{NUMBER:mongoElapsedTime:int}ms
+
+MONGO3_LOG %{TIMESTAMP_ISO8601:log_ts} %{MONGO3_SEVERITY:severity} %{MONGO3_COMPONENT:component}%{SPACE}\[%{DATA:context}\] %{MONGO_SLOWQUERY}[\n]?$
+#MONGO3_LOG %{TIMESTAMP_ISO8601:log_ts} %{MONGO3_SEVERITY:severity} %{MONGO3_COMPONENT:component}%{SPACE}\[%{DATA:context}\] %{DATA}[\n]?$

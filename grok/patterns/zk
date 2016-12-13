@@ -1,0 +1,6 @@
+# 2016-08-23 16:01:29,885 [myid:2] - INFO  [NIOServerCxn.Factory:0.0.0.0/0.0.0.0:2181:NIOServerCnxn@1007] - Closed socket connection for client /10.168.91.195:24905 which had sessionid 0x25055bd14a9f3d1
+# 2016-08-23 15:51:06,672 [myid:] - INFO  [ProcessThread(sid:0 cport:-1)::PrepRequestProcessor@645] - Got user-level KeeperException when processing sessionid:0x156b66199a80000 type:create cxid:0x39 zxid:0x15 txntype:-1 reqpath:n/a Error Path:/brokers Error:KeeperErrorCode = NodeExists for /brokers
+
+ZK_ID ([\d]+)?
+
+ZK_LOG %{TIMESTAMP_ISO8601:log_ts} \[myid:%{ZK_ID:zk_id:int}\] - %{DATA:severity}%{SPACE} (?P<log_msg>.*)

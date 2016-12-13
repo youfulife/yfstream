@@ -1,0 +1,10 @@
+NGINX_TIMESTAMP %{YEAR}/%{MONTHNUM}/%{MONTHDAY}[T ]%{HOUR}:%{MINUTE}:%{SECOND}
+
+#log_format combined '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent"';
+
+NGINX_ACCESS_LOG_COMBINED %{IPORHOST:remote_addr} - %{USER:remote_user} \[%{HTTPDATE:time_local}\] "%{WORD:method} %{NOTSPACE:uri} HTTP/%{NUMBER}" %{NUMBER:status_code:int} (?:%{NUMBER:resp_body_bytes:int}|-) "%{DATA:referrer}" "%{DATA:user_agent}"[\n]?$
+
+# log_format error 'YYYY/MM/DD HH:MM:SS [LEVEL] PID#TID: *CID MESSAGE'
+# With PID and TID being the logging process and thread id and CID a number identifying a (probably proxied) connection, probably a counter. The *CID part is optional.
+
+NGINX_ERROR_LOG %{NGINX_TIMESTAMP:time_local} \[%{DATA:severity}\] %{NUMBER:pid:int}#%{NUMBER:tid:int}:(\s\*\d+)? %{DATA:errmsg}\n

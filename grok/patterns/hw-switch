@@ -1,0 +1,8 @@
+#<188>Sep  2 2016 13:36:05 YangPuXinXiWei-S9706_Master %%01SNMP/4/SNMP_FAIL(s)[1104943]:Failed to login through SNMP. (Ip=10.216.1.240, Times=5, Reason=the community was incorrect, VPN= )
+#<190>Sep  2 2016 13:36:48 YangPuXinXiWei-S9706_Master %%01SECE/6/PORT_ATTACK_END(l)[1104961]:Auto port-defend stop.(SourceAttackInterface=XGigabitEthernet1/0/0, AttackProtocol=ARP-REQUEST)
+#<188>Sep  2 2016 13:36:09 YangPuXinXiWei-S9706_Master %%01OSPF/4/CONFLICT_ROUTERID_INTF(l)[1104947]:OSPF Router id conflict is detected on interface. (ProcessId=100, RouterId=192.168.5.1, AreaId=0.0.0.0, InterfaceName=Vlanif10,  IpAddr=10.216.20.254, PacketSrcIp=10.216.252.1)
+
+
+HWTIMESTAMP %{MONTH} +%{MONTHDAY} %{YEAR} %{TIME}
+
+HW_SWITCH \<[\d]+\>%{HWTIMESTAMP:log_ts} (?P<hostname>.*?) \%\%%{INT:version:int}(?P<module>.*?)\/%{INT:severity:int}\/(?P<brief>.*?)\((?P<flag>.+?)\)\[%{INT:count:int}\]:(?P<log_msg>.*)

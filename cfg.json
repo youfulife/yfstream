@@ -1,0 +1,32 @@
+{
+    "debug": true,
+
+    "http": {
+        "enabled": true,
+        "listen": "0.0.0.0:6380"
+    },
+
+    "pull": {
+        "kafka": {
+            "enabled": true,
+            "brokers": ["10.161.166.192:8301", "10.162.110.184:8301", "10.252.117.33:8301"],
+            "topics": ["packetbeat"],
+            "consumerId": "yfstream"
+        }
+    },
+
+    "dump": {
+        "es": {
+            "enabled": true,
+            "interval": 5,
+            "bulkUrl": "http://10.26.90.167:7759/_bulk",
+            "indexPrefix": "ys",
+            "indexSuffix": "2006.01.02"
+        },
+        "redis": {
+            "enabled": true,
+            "server": "127.0.0.1:3306"
+        }
+    }
+
+}

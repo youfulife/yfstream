@@ -1,0 +1,4 @@
+# 2016/08/22 11:07:27 fair bingo, pid: 3243, goroutine num: 86
+
+FAIR_TIMESTAMP %{YEAR}/%{MONTHNUM}/%{MONTHDAY}[T ]%{HOUR}:%{MINUTE}:%{SECOND}
+FAIR_LOG %{FAIR_TIMESTAMP:log_ts} fair bingo, pid: %{POSINT:pid:int}, goroutine num: %{POSINT:goroutine_num:int}[\n]?$
