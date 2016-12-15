@@ -47,12 +47,21 @@ type DumpConfig struct {
 	Redis RedisConfig `json:"redis"`
 }
 
+//AlertConfig for alert
+type AlertConfig struct {
+	Enabled   bool   `json:"enabled"`
+	Interval  int64  `json:"interval"`
+	MysqlHost string `json:"mysqlHost"`
+	RedisHost string `json:"redisHost"`
+}
+
 //GlobalConfig ...
 type GlobalConfig struct {
-	Debug bool        `json:"debug"`
-	HTTP  *HTTPConfig `json:"http"`
-	Pull  *PullConfig `json:"pull"`
-	Dump  *DumpConfig `json:"dump"`
+	Debug bool         `json:"debug"`
+	HTTP  *HTTPConfig  `json:"http"`
+	Pull  *PullConfig  `json:"pull"`
+	Dump  *DumpConfig  `json:"dump"`
+	Alert *AlertConfig `json:"alert"`
 }
 
 var (

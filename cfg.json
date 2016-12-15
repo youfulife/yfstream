@@ -27,6 +27,13 @@
             "enabled": true,
             "server": "127.0.0.1:3306"
         }
+    },
+
+    "alert": {
+        "enabled": true,
+        "interval": 3,
+    	"mysqlHost": "root:123456@tcp(127.0.0.1:3306)/hodor?loc=Local&parseTime=true",
+    	"redisHost": "127.0.0.1:6379"
     }
 
 }
