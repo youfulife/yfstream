@@ -52,7 +52,6 @@ func filter(in <-chan string, outC ...chan<- string) {
 }
 
 func main() {
-	fmt.Println("hello yfstream!")
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	cfg := flag.String("c", "cfg.json", "configuration file")
