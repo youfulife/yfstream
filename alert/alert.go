@@ -3,12 +3,12 @@ package alert
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/bitly/go-simplejson"
+	"time"
+
 	"github.com/chenyoufu/jepl"
 	"github.com/chenyoufu/yfstream/g"
 	"github.com/wxjuyun/common/model"
 	"github.com/wxjuyun/common/utils"
-	"time"
 )
 
 func checkErr(err error) {
@@ -42,62 +42,43 @@ func judge(messages []string) {
 
 	for _, rule := range globalRules {
 
-		stmt, e := jepl.ParseStatement(rule.SQL)
-		checkErr(e)
-		cond := stmt.(*jepl.SelectStatement).Condition
+		pointsM := jepl.EvalSQL(rule.SQL, messages)
+		for k, mps := range pointsM {
 
-		fmt.Printf("timestamp: %d, doc count: %d\n", time.Now().Unix(), len(messages))
-		fmt.Println(rule.SQL, rule.Note)
-		for _, msg := range messages {
-			doc, err := simplejson.NewJson([]byte(msg))
+			metric := new(model.MetricValue)
+			metric.RuleID = rule.RuleID
+			metric.Value = mps[0].Metric
+			metric.Timestamp = mps[0].TS
+
+			fmt.Println(k, metric)
+
+			strategy, ok := globalStrategies[rule.RuleID]
+			fmt.Println(strategy)
+			if !ok {
+				continue
+			}
+			pk := utils.Md5(rule.RuleID)
+			remain := 10
+			now := time.Now().Unix()
+			HistoryBigMap[pk[0:2]].PushFrontAndMaintain(pk, metric, remain, now)
+			l, ok := HistoryBigMap[pk[0:2]].Get(pk)
+			if !ok {
+				continue
+			}
+
+			fn, err := ParseFuncFromString(strategy.Func, strategy.Op, strategy.Threshold)
 			checkErr(err)
-			m := doc.MustMap()
-			switch res := jepl.Eval(cond, m).(type) {
-			case bool:
-				if res == true {
-					stmt.(*jepl.SelectStatement).EvalFunctionCalls(m)
+
+			isTriggered := fn.Compute(l)
+			if isTriggered {
+				event := &model.Event{
+					Rule:        *rule,
+					MetricValue: *metric,
+					Strategy:    *strategy,
+					Ets:         now,
 				}
-			default:
-				fmt.Println("Select Where Condition parse error")
-				fmt.Println(res)
+				sendEvent(event)
 			}
-		}
-
-		mps := stmt.(*jepl.SelectStatement).EvalMetric()
-
-		metric := new(model.MetricValue)
-		metric.RuleID = rule.RuleID
-		metric.Value = mps[0].Metric
-		metric.Timestamp = mps[0].TS
-
-		fmt.Println(metric)
-
-		strategy, ok := globalStrategies[rule.RuleID]
-		fmt.Println(strategy)
-		if !ok {
-			continue
-		}
-		pk := utils.Md5(rule.RuleID)
-		remain := 10
-		now := time.Now().Unix()
-		HistoryBigMap[pk[0:2]].PushFrontAndMaintain(pk, metric, remain, now)
-		l, ok := HistoryBigMap[pk[0:2]].Get(pk)
-		if !ok {
-			continue
-		}
-
-		fn, err := ParseFuncFromString(strategy.Func, strategy.Op, strategy.Threshold)
-		checkErr(err)
-
-		isTriggered := fn.Compute(l)
-		if isTriggered {
-			event := &model.Event{
-				Rule:        *rule,
-				MetricValue: *metric,
-				Strategy:    *strategy,
-				Ets:         now,
-			}
-			sendEvent(event)
 		}
 	}
 }
